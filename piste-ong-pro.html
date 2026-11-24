@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Piste ONG Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f3f8;--card:#fff;--ink:#1c2440;--muted:#5b6482;--line:#dde0ec;--accent:#2d4fa3;--accent-ink:#fff;--ochre:#c9821b;--good:#1f7a4d;--good-bg:#e4f4ec;--warn:#9a4d00;--warn-bg:#fdf0dc;--bad:#a12626;--bad-bg:#fbe7e7;--display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;--body:'Source Sans 3','Segoe UI',system-ui,sans-serif;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#12162a;--card:#1b2140;--ink:#e8ebf6;--muted:#a2abc9;--line:#2c3459;--accent:#8fa8ff;--accent-ink:#10163a;--ochre:#e0a247;--good:#6fd3a1;--good-bg:#17382b;--warn:#f0b866;--warn-bg:#3a2b12;--bad:#f19a9a;--bad-bg:#3d1c1c;color-scheme:dark}}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:17px/1.5 var(--body)}
+.band{height:8px;background:repeating-linear-gradient(90deg,var(--ink) 0 16px,var(--ochre) 16px 22px,var(--ink) 22px 38px,transparent 38px 46px)}
+.top{max-width:900px;margin:0 auto;padding:12px 16px 4px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.logo{font:700 1.3rem var(--display)}.logo span{background:var(--ochre);color:#fff;border-radius:6px;padding:0 7px;font-size:.9rem;margin-left:4px}
+#tabs{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:8px 16px;max-width:900px;margin:0 auto;border-bottom:1px solid var(--line)}
+#tabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 14px;border-radius:999px;font:600 .95rem var(--body);cursor:pointer;min-height:40px}
+#tabs button[aria-selected=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+main{max-width:900px;margin:0 auto;padding:16px 16px 60px}
+h1{font:700 2rem/1.1 var(--display);margin:8px 0 10px;text-wrap:balance}
+h2{font:700 1.35rem var(--display);margin:24px 0 10px}
+h3{font:700 1.05rem var(--display);margin:0 0 4px}
+p{margin:0 0 10px}.muted{color:var(--muted)}.small{font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:0 0 12px}
+.grid{display:grid;gap:12px}.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+label{display:block;font-weight:600;font-size:.92rem;margin:10px 0 4px}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px}
+textarea{min-height:84px;resize:vertical}
+input:focus,textarea:focus,select:focus,button:focus-visible,a:focus-visible{outline:3px solid var(--ochre);outline-offset:2px}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:11px 18px;font:600 1rem var(--body);cursor:pointer;text-decoration:none;min-height:44px}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn.sm{padding:6px 12px;min-height:36px;font-size:.9rem}.btn.bad{background:var(--bad-bg);color:var(--bad)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.82rem;font-weight:600}
+.pill.ok{background:var(--good-bg);color:var(--good)}.pill.no{background:var(--warn-bg);color:var(--warn)}.pill.bad{background:var(--bad-bg);color:var(--bad)}
+.lock{background:var(--warn-bg);color:var(--warn);border-radius:12px;padding:12px 14px;margin:10px 0}
+.steps{list-style:none;padding:0;margin:0}.steps li{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);flex:0 0 24px;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.dot.on{background:var(--good);border-color:var(--good);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);font-size:.92rem}
+.big{font:700 2rem var(--display);font-variant-numeric:tabular-nums}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20;max-width:90vw}
+#toast.on{opacity:1}
+/* Aperçu papier: toujours blanc */
+.paper{background:#fff;color:#1a1a1a;border:1px solid var(--line);border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.12);padding:28px;font:13px/1.45 Arial,Helvetica,sans-serif;overflow-wrap:anywhere}
+.cv h1{font:700 24px Arial;margin:0;color:#2d4fa3}.cv .tt{font-weight:700;margin:2px 0 4px}.cv .ct{color:#555;font-size:12px}
+.cv h4{margin:14px 0 4px;font:700 13px Arial;color:#2d4fa3;border-bottom:1.5px solid #2d4fa3;padding-bottom:2px;text-transform:uppercase;letter-spacing:.04em}
+.cv ul{margin:3px 0 0;padding-left:18px}.cv .it{margin:0 0 8px}.cv .it b{display:block}.cv .wm{margin-top:18px;border-top:1px solid #ddd;padding-top:6px;font-size:10px;color:#999;text-align:center}
+.cv.moderne{padding:0}.cv.moderne .gr{display:grid;grid-template-columns:34% 1fr}
+.cv.moderne .sd{background:#1c2440;color:#fff;padding:24px 16px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.cv.moderne .sd h4{color:#e0a247;border-color:#e0a247}.cv.moderne .sd .ct{color:#dfe3f5}.cv.moderne .mn{padding:24px 18px}
+.cv.sobre{text-align:left}.cv.sobre h1{color:#111}.cv.sobre h4{color:#111;border-color:#111}
+.lt p{margin:0 0 10px;white-space:pre-wrap}
+@media (max-width:560px){.paper{padding:16px}.cv.moderne .gr{grid-template-columns:1fr}}
+@media print{@page{size:A4;margin:12mm}
+body.pcv *,body.plet *{visibility:hidden}
+body.pcv #cvprev,body.pcv #cvprev *,body.plet #letprev,body.plet #letprev *{visibility:visible}
+body.pcv #cvprev,body.plet #letprev{position:absolute;left:0;top:0;width:100%;border:0;box-shadow:none;padding:0}
+body.pcv #cvprev.moderne{padding:0}}
+</style>
+</head>
+<body>
+<div class="band" aria-hidden="true"></div>
+<header class="top"><div class="logo" id="logo" style="cursor:default">Piste ONG<span>Pro</span></div><button class="btn sm ghost" id="badge" data-t="pro"></button></header>
+<nav id="tabs" aria-label="Sections"></nav>
+<main>
+<section id="t-home"></section>
+<section id="t-cv" hidden></section>
+<section id="t-offre" hidden></section>
+<section id="t-lettre" hidden></section>
+<section id="t-ent" hidden></section>
+<section id="t-suivi" hidden></section>
+<section id="t-pro" hidden></section>
+<section id="t-admin" hidden></section>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ===== Réglages à modifier ===== */
+const CFG={wa:'22375131158',price:2500,salt:'k7Q-ong-2026-x9Zt'};
+/* ================================ */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),3200)}
+/* codes */
+function h53(str){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0,c;i<str.length;i++){c=str.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}
+h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0)}
+const AL='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function sum(b){let n=h53(CFG.salt+b),s='';for(let i=0;i<4;i++){s+=AL[n%32];n=Math.floor(n/32)}return s}
+function mkCode(){let b='';for(let i=0;i<4;i++)b+=AL[Math.floor(Math.random()*32)];return 'PRO-'+b+'-'+sum(b)}
+function okCode(c){const m=/^PRO-([A-Z0-9]{4})-([A-Z0-9]{4})$/.exec(String(c||'').trim().toUpperCase());return !!m&&sum(m[1])===m[2]}
+/* état */
+const KEY='pongpro_v1';let S={};
+function load(){let o=null;try{o=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+S=Object.assign({cv:{template:'classique',exp:[{}],edu:[{}]},let:{type:'ong'},jobs:[],ans:{},pro:'',sales:[],pin:'',analysed:false},o||{});
+if(!S.cv.exp||!S.cv.exp.length)S.cv.exp=[{}];if(!S.cv.edu||!S.cv.edu.length)S.cv.edu=[{}]}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const isPro=()=>okCode(S.pro);
+function getP(p){return p.split('.').reduce((o,k)=>o==null?undefined:o[k],S)}
+function setP(p,v){const k=p.split('.');let o=S;for(let i=0;i<k.length-1;i++){if(o[k[i]]==null)o[k[i]]={};o=o[k[i]]}o[k[k.length-1]]=v}
+function F(p,label,o={}){const v=esc(getP(p)||'');const ph=esc(o.ph||'');
+if(o.rows)return `<label for="f-${p}">${label}</label><textarea id="f-${p}" data-p="${p}" rows="${o.rows}" placeholder="${ph}">${v}</textarea>`;
+return `<label for="f-${p}">${label}</label><input id="f-${p}" data-p="${p}" type="${o.type||'text'}" value="${v}" placeholder="${ph}">`}
+/* navigation */
+const TABS=[['home','Accueil'],['cv','Mon CV'],['offre','Analyser une offre'],['lettre','Lettre'],['ent','Entretien'],['suivi','Mes candidatures'],['pro','Passer Pro']];
+function go(t){$$('main>section').forEach(s=>s.hidden=s.id!=='t-'+t);
+$$('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===t));
+({home:rHome,cv:rCV,offre:rOffre,lettre:rLettre,ent:rEnt,suivi:rSuivi,pro:rPro,admin:rAdmin})[t]();scrollTo(0,0);badge()}
+function badge(){const b=$('#badge');b.textContent=isPro()?'Pro activé ✓':'Gratuit · Passer Pro';b.dataset.t='pro'}
+/* ===== Accueil ===== */
+function cvDone(){const c=S.cv;return !!(c.nom&&c.titre&&(c.exp||[]).some(e=>e.poste))}
+function rHome(){const st=[['Remplir mon CV',cvDone(),'cv'],['Analyser une offre d\'emploi',S.analysed,'offre'],['Suivre une candidature',S.jobs.length>0,'suivi'],['Préparer 3 réponses d\'entretien',Object.keys(S.ans).filter(k=>(S.ans[k]||'').length>40).length>=3,'ent']];
+$('#t-home').innerHTML=`<h1>Postulez en ONG avec méthode</h1>
+<p class="muted">Un atelier complet pour préparer votre CV, vos lettres et vos entretiens, et suivre vos candidatures. Vos données restent sur votre téléphone.</p>
+<div class="card"><h3>Votre parcours</h3><ul class="steps">${st.map(s=>`<li><span class="dot ${s[1]?'on':''}">${s[1]?'✓':''}</span><button class="btn sm ghost" data-t="${s[2]}">${s[0]}</button></li>`).join('')}</ul></div>
+<div class="grid g2">
+<div class="card"><h3>Gratuit</h3><ul><li>CV avec un modèle</li><li>Analyse d'offre et alerte arnaque</li><li>Suivi des candidatures</li><li>3 questions d'entretien</li></ul></div>
+<div class="card"><h3>Pro · ${CFG.price.toLocaleString('fr-FR')} FCFA</h3><ul><li>3 modèles de CV, sans mention de l'outil</li><li>Lettres ONG et bourse générées</li><li>10 questions d'entretien avec chrono</li><li>Impression et copie des lettres</li></ul><button class="btn" data-t="pro">Voir le Pro</button></div></div>
+<p class="small muted">Aucun outil ne garantit un emploi. Une organisation sérieuse ne demande jamais d'argent pour une candidature.</p>`}
+/* ===== CV ===== */
+const TPL=[['classique','Classique',false],['moderne','Moderne',true],['sobre','Sobre (ATS)',true]];
+function rCV(){const c=S.cv;
+$('#t-cv').innerHTML=`<h1>Mon CV</h1><p class="muted">Remplissez les champs, l'aperçu se met à jour. Une action et un résultat par ligne d'expérience.</p>
+<div class="row" id="tplrow">${TPL.map(t=>`<button class="btn sm ${c.template===t[0]?'':'ghost'}" data-act="tpl" data-v="${t[0]}">${t[1]}${t[2]&&!isPro()?' 🔒':''}</button>`).join('')}</div>
+<div class="grid g2"><div>
+<div class="card"><h3>Identité</h3>${F('cv.nom','Prénom et nom',{ph:'Awa Diarra'})}${F('cv.titre','Poste visé',{ph:'Chargée de suivi-évaluation'})}${F('cv.ville','Ville, pays',{ph:'Bougouni, Mali'})}${F('cv.tel','Téléphone')}${F('cv.email','E-mail',{type:'email'})}</div>
+<div class="card"><h3>Résumé</h3>${F('cv.resume','3 lignes maximum',{rows:3,ph:'Technicien supérieur en travail social, 4 ans d\'expérience en genre et suivi-évaluation…'})}</div>
+<div class="card"><h3>Expériences</h3>${(c.exp||[]).map((e,i)=>`<div style="border-top:${i?'1px solid var(--line)':'0'};padding-top:${i?8:0}px">${F('cv.exp.'+i+'.poste','Poste')}${F('cv.exp.'+i+'.org','Organisation')}${F('cv.exp.'+i+'.periode','Période',{ph:'mars 2020 – oct. 2024'})}${F('cv.exp.'+i+'.details','Réalisations (une par ligne)',{rows:4,ph:'Collecte de données de 12 groupements avec KoboCollect\nProduction d\'un rapport mensuel'})}<button class="btn sm bad" data-act="del" data-k="exp" data-i="${i}" style="margin-top:8px">Supprimer</button></div>`).join('')}<button class="btn sm ghost" data-act="add" data-k="exp" style="margin-top:10px">+ Ajouter une expérience</button></div>
+<div class="card"><h3>Formation</h3>${(c.edu||[]).map((e,i)=>`<div style="border-top:${i?'1px solid var(--line)':'0'};padding-top:${i?8:0}px">${F('cv.edu.'+i+'.diplome','Diplôme')}${F('cv.edu.'+i+'.ecole','Établissement')}${F('cv.edu.'+i+'.annee','Année')}<button class="btn sm bad" data-act="del" data-k="edu" data-i="${i}" style="margin-top:8px">Supprimer</button></div>`).join('')}<button class="btn sm ghost" data-act="add" data-k="edu" style="margin-top:10px">+ Ajouter une formation</button></div>
+<div class="card"><h3>Compétences, langues, références</h3>${F('cv.comp','Compétences (séparées par des virgules)',{rows:2,ph:'Suivi-évaluation, KoboCollect, Excel, rédaction de rapports'})}${F('cv.langues','Langues',{ph:'Français (courant), Bambara (langue maternelle), Anglais (moyen)'})}${F('cv.refs','Références',{rows:2})}</div>
+</div><div>
+<div class="row" style="margin-bottom:8px"><button class="btn" data-act="print" data-w="cv">Imprimer / PDF</button><button class="btn ghost" data-act="doc">Télécharger (page CV)</button><button class="btn ghost" data-act="exp">Sauvegarde</button><label class="btn ghost" style="margin:0">Restaurer<input type="file" id="imp" accept=".json" hidden></label></div>
+<div class="paper cv ${esc(c.template)}" id="cvprev"></div></div></div>`;renderPrev()}
+function lines(t){return String(t||'').split('\n').map(x=>x.trim()).filter(Boolean)}
+function cvHTML(){const c=S.cv,t=c.template;const E=s=>esc(s);
+const contact=[c.ville,c.tel,c.email].filter(Boolean).map(E).join(' · ');
+const exp=(c.exp||[]).filter(e=>e.poste||e.org).map(e=>`<div class="it"><b>${E(e.poste)}${e.org?' · '+E(e.org):''}</b><span class="ct">${E(e.periode)}</span>${lines(e.details).length?'<ul>'+lines(e.details).map(l=>`<li>${E(l)}</li>`).join('')+'</ul>':''}</div>`).join('');
+const edu=(c.edu||[]).filter(e=>e.diplome).map(e=>`<div class="it"><b>${E(e.diplome)}</b><span class="ct">${[e.ecole,e.annee].filter(Boolean).map(E).join(' · ')}</span></div>`).join('');
+const comp=(c.comp||'').split(/[,\n]/).map(x=>x.trim()).filter(Boolean);
+const B=(h,x)=>x?`<h4>${h}</h4>${x}`:'';
+const wm=isPro()?'':'<div class="wm">Créé avec Piste ONG · version gratuite</div>';
+const compH=comp.length?'<ul>'+comp.map(x=>`<li>${E(x)}</li>`).join('')+'</ul>':'';
+const langH=c.langues?`<p>${E(c.langues)}</p>`:'';
+const head=`<h1>${E(c.nom||'Prénom NOM')}</h1><div class="tt">${E(c.titre||'Poste visé')}</div>`;
+if(t==='moderne')return `<div class="gr"><div class="sd"><h4 style="margin-top:0">Contact</h4><div class="ct">${[c.ville,c.tel,c.email].filter(Boolean).map(E).join('<br>')}</div>${B('Compétences',compH)}${B('Langues',langH)}</div><div class="mn">${head}${B('Profil',c.resume?`<p>${E(c.resume)}</p>`:'')}${B('Expérience',exp)}${B('Formation',edu)}${B('Références',c.refs?`<p>${E(c.refs).replace(/\n/g,'<br>')}</p>`:'')}${wm}</div></div>`;
+return `${head}<div class="ct">${contact}</div>${B('Résumé',c.resume?`<p>${E(c.resume)}</p>`:'')}${B('Expérience professionnelle',exp)}${B('Formation',edu)}${B('Compétences',compH)}${B('Langues',langH)}${B('Références',c.refs?`<p>${E(c.refs).replace(/\n/g,'<br>')}</p>`:'')}${wm}`}
+function renderPrev(){const p=$('#cvprev');if(p){p.className='paper cv '+S.cv.template;p.innerHTML=cvHTML()}}
+function doPrint(w){if(w==='cv'&&!isPro()&&S.cv.template!=='classique'){toast('Modèle réservé au Pro');return}
+document.body.classList.add(w==='cv'?'pcv':'plet');
+try{window.print()}catch(e){toast('Impression bloquée ici. Utilisez Télécharger (page CV).')}
+setTimeout(()=>document.body.classList.remove('pcv','plet'),800)}
+async function dl(name,mime,data){try{const d=window.claude&&await window.claude.use('downloads');if(!d){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data]));a.download=name;document.body.appendChild(a);a.click();a.remove();toast('Fichier téléchargé : '+name);return}await d.save({filename:name,data:data});toast('Fichier enregistré : '+name)}catch(e){if(!e||e.code!=='declined')toast('Téléchargement impossible ici')}}
+function docCV(){const css='body{font-family:Arial;font-size:11pt}h1{color:#2d4fa3;font-size:22pt;margin:0}h4{color:#2d4fa3;border-bottom:1px solid #2d4fa3;text-transform:uppercase;font-size:11pt;margin:14pt 0 4pt}.ct{color:#555}';
+dl((S.cv.nom||'CV').replace(/\s+/g,'_')+'_CV.html','text/html',`<html><head><meta charset="utf-8"><style>${css}</style></head><body>${cvHTML()}</body></html>`)}
+/* ===== Offre ===== */
+const KW=[['Suivi-évaluation / MEAL',/suivi.?evaluation|\bs&e\b|\bmeal\b|\bmel\b|\bmerl\b/],['Genre',/\bgenre\b|\bgender\b/],['VBG',/\bvbg\b|violences? basees? sur le genre|\bgbv\b/],['Protection',/protection/],['PSEA',/\bpsea\b|exploitation et .{0,6}abus/],['Redevabilité',/redevabilite|accountab/],['Collecte de données (Kobo, ODK, enquêtes)',/kobo|\bodk\b|collecte de donnees|enquete/],['Excel',/excel/],['Rapports',/rapport/],['Gestion de projet',/gestion de projet|gestion des projets|project management/],['Renforcement des capacités',/renforcement des capacites|capacity/],['Formation / animation',/formation|animation|facilitation/],['Plaidoyer',/plaidoyer|advocacy/],['Approche communautaire',/communautaire|communaute/],['Partenariat',/partenari/],['Budget / finances',/budget|financ|comptab/],['Logistique / achats',/logistique|achats|approvisionnement/],['Sécurité alimentaire / nutrition',/securite alimentaire|nutrition/],['Eau, hygiène, assainissement',/\bwash\b|eau potable|assainissement|hygiene/],['Santé',/sante|\bsmi\b/],['Éducation',/education|ecole|scolar/],['Anglais',/anglais|english/],['Permis / moto',/permis|moto\b/],['Travail de terrain',/terrain|deplacements? frequents/],['Indicateurs',/indicateur/],['Cadre logique / théorie du changement',/cadre logique|theorie du changement/],['Épargne / AVEC / VSLA',/\bavec\b|\bvsla\b|epargne|microfinance/]];
+const SCAM=[[/frais (de )?(dossier|traitement|inscription|visa|formation|recrutement)/,'Demande de frais de dossier ou de recrutement'],[/western union|moneygram|bitcoin|carte cadeau|mandat cash/,'Paiement par un canal suspect'],[/(whatsapp|telegram).{0,40}(candidature|postuler)|postuler.{0,40}(whatsapp|telegram)/,'Candidature uniquement par messagerie'],[/@(gmail|yahoo|hotmail|outlook)\./,'Adresse e-mail personnelle au lieu d\'un domaine officiel'],[/sans (diplome|experience).{0,60}(salaire|gagn)|gagn\w+ .{0,30}(par jour|par semaine)/,'Promesse de salaire élevé sans qualification'],[/urgent.{0,40}(recrutement massif|recrute immediatement)|recrutement massif/,'Recrutement massif et urgent']];
+function rOffre(){$('#t-offre').innerHTML=`<h1>Analyser une offre</h1><p class="muted">Collez le texte de l'offre. L'outil repère les compétences demandées, compare avec votre CV et signale les risques d'arnaque.</p>
+<div class="card"><label for="offtxt">Texte de l'offre</label><textarea id="offtxt" rows="9" placeholder="Collez ici les termes de référence ou l'annonce"></textarea><div class="row" style="margin-top:10px"><button class="btn" data-act="analyse">Analyser</button><button class="btn ghost" data-act="clr">Effacer</button></div></div><div id="offres"></div>`}
+function analyse(){const raw=$('#offtxt').value;if(raw.trim().length<30){toast('Collez un texte plus long');return}
+const t=norm(raw),cv=norm(JSON.stringify(S.cv));const found=KW.filter(k=>k[1].test(t));
+const have=found.filter(k=>k[1].test(cv)),miss=found.filter(k=>!k[1].test(cv));
+const alerts=SCAM.filter(s=>s[0].test(t));S.analysed=true;save();
+const pct=found.length?Math.round(have.length/found.length*100):0;
+$('#offres').innerHTML=`<div class="card"><h3>Correspondance avec votre CV</h3><div class="big">${found.length?pct+' %':'—'}</div><p class="muted small">${found.length?have.length+' sur '+found.length+' compétences de l\'offre apparaissent dans votre CV.':'Aucune compétence connue détectée. Vérifiez que vous avez collé l\'offre complète.'}</p>
+${have.length?`<h3>Déjà dans votre CV</h3><div class="chips">${have.map(k=>`<span class="pill ok">${esc(k[0])}</span>`).join('')}</div>`:''}
+${miss.length?`<h3 style="margin-top:10px">À ajouter si c'est vrai</h3><div class="chips">${miss.map(k=>`<span class="pill no">${esc(k[0])}</span>`).join('')}</div><p class="small muted">N'ajoutez que ce que vous maîtrisez vraiment : on vous interrogera dessus.</p>`:''}</div>
+<div class="card"><h3>Signaux d'alerte</h3>${alerts.length?alerts.map(a=>`<p><span class="pill bad">Attention</span> ${esc(a[1])}</p>`).join('')+'<p class="small">Vérifiez l\'offre sur le site officiel de l\'organisation avant d\'envoyer quoi que ce soit.</p>':'<p><span class="pill ok">Aucun signal</span> Aucun signal courant détecté. Cela ne prouve pas que l\'offre est authentique : vérifiez toujours sur le site officiel.</p>'}</div>
+<button class="btn ghost" data-t="suivi">Suivre cette candidature</button>`}
+/* ===== Lettre ===== */
+const LF={ong:[['poste','Poste visé'],['ref','Référence de l\'offre'],['org','Organisation'],['mission','Mission de l\'organisation qui vous motive'],['diplome','Votre diplôme'],['annees','Années d\'expérience (ex. 4 ans)'],['domaine','Domaine'],['mission1','Une mission que vous avez menée'],['mission2','Une deuxième mission'],['situation','Exemple : la situation'],['action','Ce que vous avez fait'],['resultat','Résultat obtenu'],['dispo','Disponibilité (ex. immédiatement)'],['nom','Votre nom'],['ville','Votre ville']],bourse:[['bourse','Nom de la bourse'],['organisme','Organisme'],['formation','Formation visée'],['etab','Établissement'],['objectif','Objectif professionnel'],['domaine','Votre domaine'],['realisation','Une réalisation marquante'],['besoin','Ce qui vous manque et que la formation apporte'],['retour','Ce que vous ferez après la formation'],['qualites','Vos qualités, avec un exemple'],['nom','Votre nom'],['ville','Votre ville']]};
+function rLettre(){const t=S.let.type;
+$('#t-lettre').innerHTML=`<h1>Lettre de motivation</h1><p class="muted">Remplissez les champs : la lettre s'écrit à partir de vos réponses, avec la structure attendue par les recruteurs.</p>
+${isPro()?'':'<div class="lock"><b>Version gratuite :</b> vous voyez le début de la lettre. Le Pro débloque la lettre complète, la copie et l\'impression. <button class="btn sm" data-t="pro">Passer Pro</button></div>'}
+<div class="grid g2"><div class="card"><label for="f-let.type">Type de lettre</label><select id="f-let.type" data-p="let.type"><option value="ong" ${t==='ong'?'selected':''}>Candidature ONG</option><option value="bourse" ${t==='bourse'?'selected':''}>Bourse</option></select><div id="letform">${LF[t].map(f=>F('let.'+f[0],f[1],{rows:/mission|situation|action|resultat|realisation|besoin|retour|qualites|objectif/.test(f[0])?2:0})).join('')}</div></div>
+<div><div class="row" style="margin-bottom:8px"><button class="btn" data-act="letprint">Imprimer / PDF</button><button class="btn ghost" data-act="letcopy">Copier</button></div><div class="paper lt" id="letprev"></div></div></div>`;renderLet()}
+function compose(){const L=S.let,t=L.type;const v=k=>{const f=LF[t].find(x=>x[0]===k);return (L[k]||'').trim()||'['+(f?f[1]:k)+']'};
+const date=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+const head=`${(L.nom||'').trim()||'[Votre nom]'}\n${(L.ville||'').trim()||'[Ville]'}, le ${date}`;
+if(t==='ong')return [head,`Objet : Candidature au poste de ${v('poste')}${(L.ref||'').trim()?' (réf. '+L.ref.trim()+')':''}`,'Madame, Monsieur,',`Votre action en faveur de ${v('mission')} correspond à mon engagement professionnel. C'est pourquoi je vous adresse ma candidature au poste de ${v('poste')} au sein de ${v('org')}.`,`Titulaire d'un ${v('diplome')}, je compte ${v('annees')} d'expérience dans ${v('domaine')}. Dans mes fonctions précédentes, j'ai ${v('mission1')} et ${v('mission2')}.`,`Par exemple, ${v('situation')}, j'ai ${v('action')}, ce qui a permis ${v('resultat')}.`,`Disponible ${v('dispo')}, je serais heureux de vous exposer ma motivation lors d'un entretien. Mon CV est joint à ce courrier.`,'Veuillez agréer, Madame, Monsieur, l\'expression de ma considération distinguée.',v('nom')];
+return [head,`Objet : Candidature à la bourse ${v('bourse')}`,'Madame, Monsieur,',`Je souhaite suivre ${v('formation')} à ${v('etab')} afin de ${v('objectif')}.`,`Mon parcours en ${v('domaine')}, notamment ${v('realisation')}, m'a conduit à ${v('besoin')}.`,`À l'issue de cette formation, je compte ${v('retour')}.`,`Je suis une personne engagée : ${v('qualites')}.`,`Je vous remercie de l'attention portée à mon dossier. Veuillez agréer, Madame, Monsieur, mes salutations distinguées.`,v('nom')]}
+function renderLet(){const p=$('#letprev');if(!p)return;let ps=compose();let locked=false;if(!isPro()){ps=ps.slice(0,4);locked=true}
+p.innerHTML=ps.map(x=>`<p>${esc(x)}</p>`).join('')+(locked?'<p style="color:#999">… suite de la lettre réservée au Pro</p>':'')}
+/* ===== Entretien ===== */
+const Q=[
+['Parlez-moi de vous','Votre cohérence de parcours.','Présent (poste ou formation), passé (2 expériences clés), futur (pourquoi ce poste). 60 à 90 secondes.','Je suis [titre], formé en [domaine]. Pendant [X] ans, j\'ai [expérience 1] et [expérience 2]. Ce poste me permet de [objectif].'],
+['Pourquoi notre organisation et ce poste ?','Votre motivation et votre préparation.','Un fait précis sur la mission de l\'organisation, puis le lien avec votre parcours.','Votre programme [nom] sur [thème] rejoint mon travail sur [thème]. Je peux apporter [compétence].'],
+['Racontez une réussite concrète','La réalité de votre expérience.','Méthode STAR : Situation, Tâche, Action, Résultat avec un chiffre.','Dans [contexte], je devais [tâche]. J\'ai [action]. Résultat : [chiffre ou effet observable].'],
+['Quelles sont vos forces et une faiblesse ?','Votre lucidité.','Deux forces avec un exemple chacune, une vraie faiblesse et ce que vous faites pour la corriger.','Ma force : [force], par exemple [exemple]. Je travaille [faiblesse] en [action concrète].'],
+['Comment travaillez-vous sous pression ou sur un terrain difficile ?','Votre fiabilité et votre sens de la sécurité.','Organisation, communication avec l\'équipe, respect des consignes de sécurité, un exemple.','Quand [situation], je priorise [critères], j\'informe [qui] et je [action]. Cela a permis [résultat].'],
+['Parlez d\'un désaccord avec un collègue ou un responsable','Votre esprit d\'équipe.','Faits, écoute, compromis, résultat. Ne critiquez pas votre ancien employeur.','Nous n\'étions pas d\'accord sur [sujet]. J\'ai écouté [position], proposé [solution]. Nous avons convenu de [accord].'],
+['Un bénéficiaire vous confie une information sensible. Que faites-vous ?','Votre éthique, la confidentialité et la protection (PSEA).','Respect de la personne, confidentialité, signalement par le canal prévu, aucune promesse que vous ne pouvez pas tenir.','Je l\'écoute sans juger, je lui explique les limites de la confidentialité, puis je signale au point focal selon la procédure.'],
+['Comment mesurez-vous le succès d\'un projet ?','Votre culture du résultat.','Indicateurs, outil de collecte, fréquence, usage des résultats pour corriger.','Je définis des indicateurs avec l\'équipe, je collecte avec [outil] chaque [période], j\'analyse et je présente [décision prise].'],
+['Quelle est votre disponibilité et quelles sont vos conditions ?','Vos contraintes et votre honnêteté.','Date de disponibilité, mobilité, fourchette de salaire seulement si on vous la demande.','Je suis disponible à partir de [date], mobile sur [zones]. Je m\'adapte à la grille de l\'organisation.'],
+['Avez-vous des questions pour nous ?','Votre intérêt réel.','Préparez 2 questions sur le poste, pas sur les congés ni le salaire.','À quoi ressembleraient mes trois premiers mois ? Comment mesurez-vous la réussite à ce poste ?']];
+function rEnt(){$('#t-ent').innerHTML=`<h1>Préparer l'entretien</h1><p class="muted">Pour chaque question : ce que le recruteur veut savoir, une trame, puis votre réponse écrite et un chrono de 90 secondes.</p>
+${isPro()?'':'<div class="lock">Les 3 premières questions sont gratuites. <button class="btn sm" data-t="pro">Débloquer les 10 avec le Pro</button></div>'}
+${Q.map((q,i)=>{const open=i<3||isPro();return `<div class="card"><h3>${i+1}. ${esc(q[0])} ${open?'':'<span class="pill no">Pro 🔒</span>'}</h3>${open?`<p class="small"><b>Le recruteur veut savoir :</b> ${esc(q[1])}</p><p class="small"><b>Trame :</b> ${esc(q[2])}</p><p class="small muted"><b>Exemple de structure :</b> ${esc(q[3])}</p>${F('ans.'+i,'Votre réponse',{rows:4,ph:'Écrivez votre réponse avec un exemple vrai'})}<div class="row" style="margin-top:8px"><button class="btn sm ghost" data-act="timer" data-i="${i}">Chrono 90 s</button><span id="tm${i}" class="small muted"></span></div><div id="hint${i}" class="small" style="margin-top:6px"></div>`:'<p class="muted small">Réservé aux membres Pro.</p>'}</div>`}).join('')}`;Q.forEach((q,i)=>hint(i))}
+function hint(i){const el=$('#hint'+i);if(!el)return;const a=S.ans[i]||'';if(!a.trim()){el.innerHTML='';return}
+const w=a.trim().split(/\s+/).length,d=/\d/.test(a),act=/\b(j'ai|nous avons|j'ai\s|je suis|j'etais|j'étais)\b/i.test(a);
+const ck=(ok,t)=>`<span class="pill ${ok?'ok':'no'}">${ok?'✓':'•'} ${t}</span> `;
+el.innerHTML=ck(w>=40&&w<=170,w+' mots (idéal 40 à 170)')+ck(d,'un chiffre ou une date')+ck(act,'une action à la première personne')}
+const timers={};
+function timer(i){clearInterval(timers[i]);let s=90;const el=$('#tm'+i);el.textContent='1:30';timers[i]=setInterval(()=>{s--;el.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');if(s<=0){clearInterval(timers[i]);el.textContent='Temps écoulé';toast('90 secondes écoulées')}},1000)}
+/* ===== Suivi ===== */
+const ST=['À envoyer','Envoyée','Entretien','Réponse positive','Refus'];
+function rSuivi(){
+$('#t-suivi').innerHTML=`<h1>Mes candidatures</h1><p class="muted">Notez chaque candidature pour ne rien oublier. Une relance est suggérée 10 jours après l'envoi.</p>
+<div class="card"><div class="grid g2"><div><label for="jp">Poste</label><input id="jp"></div><div><label for="jo">Organisation</label><input id="jo"></div><div><label for="jd">Date limite</label><input id="jd" type="date"></div><div><label for="js">Statut</label><select id="js">${ST.map(s=>`<option>${s}</option>`).join('')}</select></div></div><button class="btn" data-act="jadd" style="margin-top:12px">Ajouter</button></div>
+<div id="jlist">${S.jobs.length?'':'<p class="muted">Aucune candidature pour le moment.</p>'}${S.jobs.map((j,i)=>{const late=j.statut==='Envoyée'&&j.sent&&(Date.now()-j.sent)>10*864e5;return `<div class="card"><div class="row" style="justify-content:space-between"><h3>${esc(j.poste)}</h3>${late?'<span class="pill no">À relancer</span>':''}</div><p class="small muted">${esc(j.org)}${j.date?' · date limite '+esc(j.date):''}</p><div class="row"><select data-act="jst" data-i="${i}" aria-label="Statut">${ST.map(s=>`<option ${s===j.statut?'selected':''}>${s}</option>`).join('')}</select><button class="btn sm bad" data-act="jdel" data-i="${i}">Supprimer</button></div></div>`}).join('')}</div>`}
+/* ===== Pro ===== */
+function rPro(){const wa=`https://wa.me/${CFG.wa}?text=${encodeURIComponent('Bonjour, je veux activer Piste ONG Pro ('+CFG.price+' FCFA). Comment payer ?')}`;
+$('#t-pro').innerHTML=`<h1>Piste ONG Pro</h1>
+<div class="card">${isPro()?`<p><span class="pill ok">Pro activé</span> Merci. Toutes les fonctions sont débloquées sur cet appareil.</p><p class="small muted">Code : ${esc(S.pro.toUpperCase())}</p>`:`<div class="big">${CFG.price.toLocaleString('fr-FR')} FCFA <span class="small muted" style="font-weight:400">paiement unique</span></div><ul><li>3 modèles de CV, sans mention de l'outil</li><li>Lettres ONG et bourse complètes, copie et impression</li><li>10 questions d'entretien avec trames et chrono</li></ul>`}</div>
+${isPro()?'':`<h2>Comment activer</h2><ol><li><b>Écrivez sur WhatsApp</b> : vous recevez le numéro de paiement.</li><li><b>Payez par Orange Money ou Moov Money</b> et envoyez la capture.</li><li><b>Recevez votre code</b> et saisissez-le ci-dessous.</li></ol>
+<a class="btn" href="${wa}" target="_blank" rel="noopener">Écrire sur WhatsApp</a>
+<div class="card" style="margin-top:14px"><label for="code">Votre code d'activation</label><input id="code" placeholder="PRO-XXXX-XXXX" autocapitalize="characters"><button class="btn" data-act="activate" style="margin-top:10px">Activer</button></div>`}
+<p class="small muted">Aucun emploi ou aucune bourse n'est garanti. Le Pro vous aide à présenter un dossier clair.</p>`}
+/* ===== Admin (adresse de la page + #admin) ===== */
+let adminOK=false;
+function rAdmin(){const el=$('#t-admin');
+if(!S.pin){el.innerHTML=`<h1>Espace vendeur</h1><div class="card"><p>Créez votre code PIN (4 chiffres ou plus). Il protège votre registre de ventes sur cet appareil.</p><label for="pin1">Nouveau PIN</label><input id="pin1" type="password" inputmode="numeric"><button class="btn" data-act="pinset" style="margin-top:10px">Enregistrer</button></div>`;return}
+if(!adminOK){el.innerHTML=`<h1>Espace vendeur</h1><div class="card"><label for="pin2">PIN</label><input id="pin2" type="password" inputmode="numeric"><button class="btn" data-act="pinin" style="margin-top:10px">Entrer</button></div>`;return}
+const tot=S.sales.reduce((a,s)=>a+(+s.prix||0),0);
+el.innerHTML=`<h1>Espace vendeur</h1>
+<div class="grid g2"><div class="card"><div class="small muted">Ventes</div><div class="big">${S.sales.length}</div></div><div class="card"><div class="small muted">Total encaissé</div><div class="big">${tot.toLocaleString('fr-FR')} FCFA</div></div></div>
+<div class="card"><h3>Générer un code après paiement</h3><label for="ac">Nom du client</label><input id="ac"><label for="at">Téléphone du client (avec indicatif, ex. 22370000000)</label><input id="at" inputmode="tel"><label for="ap">Montant payé (FCFA)</label><input id="ap" type="number" value="${CFG.price}"><button class="btn" data-act="gen" style="margin-top:12px">Générer le code</button><div id="genout"></div></div>
+<div class="card"><h3>Registre</h3>${S.sales.length?`<div style="overflow-x:auto"><table><tr><th>Date</th><th>Client</th><th>Code</th><th>FCFA</th></tr>${S.sales.slice().reverse().map(s=>`<tr><td>${esc(s.date)}</td><td>${esc(s.client)}</td><td>${esc(s.code)}</td><td>${esc(s.prix)}</td></tr>`).join('')}</table></div><button class="btn ghost sm" data-act="csv" style="margin-top:10px">Exporter (CSV)</button>`:'<p class="muted">Aucune vente enregistrée.</p>'}</div>
+<p class="small muted">Gardez la capture du paiement avant d'envoyer un code. Ne communiquez jamais cette adresse aux clients.</p>`}
+/* ===== événements ===== */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-t],[data-act]');if(!b)return;
+if(b.dataset.t&&!b.dataset.act){go(b.dataset.t);return}
+const a=b.dataset.act,i=+b.dataset.i;
+if(a==='tpl'){const v=b.dataset.v,lk=TPL.find(t=>t[0]===v)[2];if(lk&&!isPro()){toast('Modèle réservé au Pro');return}S.cv.template=v;save();rCV()}
+else if(a==='add'){S.cv[b.dataset.k].push({});save();rCV()}
+else if(a==='del'){S.cv[b.dataset.k].splice(i,1);if(!S.cv[b.dataset.k].length)S.cv[b.dataset.k].push({});save();rCV()}
+else if(a==='print')doPrint('cv');
+else if(a==='doc'){if(!isPro()&&S.cv.template!=='classique'){toast('Modèle réservé au Pro');return}docCV()}
+else if(a==='exp')dl('piste-ong-sauvegarde.json','application/json',JSON.stringify({cv:S.cv,let:S.let,jobs:S.jobs,ans:S.ans}));
+else if(a==='analyse')analyse();
+else if(a==='clr'){$('#offtxt').value='';$('#offres').innerHTML=''}
+else if(a==='letprint'){if(!isPro()){toast('Impression réservée au Pro');return}doPrint('let')}
+else if(a==='letcopy'){if(!isPro()){toast('Copie réservée au Pro');return}const tx=compose().join('\n\n');try{navigator.clipboard.writeText(tx).then(()=>toast('Lettre copiée'),()=>toast('Copie bloquée'))}catch(e){toast('Copie bloquée')}}
+else if(a==='timer')timer(i);
+else if(a==='jadd'){const p=$('#jp').value.trim();if(!p){toast('Indiquez le poste');return}const st=$('#js').value;S.jobs.unshift({poste:p,org:$('#jo').value.trim(),date:$('#jd').value,statut:st,sent:st==='Envoyée'?Date.now():0});save();rSuivi()}
+else if(a==='jdel'){S.jobs.splice(i,1);save();rSuivi()}
+else if(a==='activate'){const c=$('#code').value.trim().toUpperCase();if(okCode(c)){S.pro=c;save();toast('Pro activé. Merci !');rPro();badge()}else toast('Code invalide. Vérifiez la saisie.')}
+else if(a==='pinset'){const p=$('#pin1').value.trim();if(p.length<4){toast('Au moins 4 caractères');return}S.pin=String(h53('pin'+p));adminOK=true;save();rAdmin()}
+else if(a==='pinin'){if(String(h53('pin'+$('#pin2').value.trim()))===S.pin){adminOK=true;rAdmin()}else toast('PIN incorrect')}
+else if(a==='gen'){const cl=$('#ac').value.trim();if(!cl){toast('Nom du client requis');return}let c=mkCode();const tel=$('#at').value.replace(/\D/g,'');
+S.sales.push({code:c,client:cl,tel,prix:+$('#ap').value||CFG.price,date:new Date().toISOString().slice(0,10)});save();
+const msg=`Bonjour ${cl}, merci pour votre paiement. Votre code Piste ONG Pro : ${c}. Ouvrez l'application, allez dans « Passer Pro » et saisissez-le.`;
+rAdmin();$('#genout').innerHTML=`<div class="lock" style="background:var(--good-bg);color:var(--good)"><b>Code : ${c}</b><div class="row" style="margin-top:8px"><a class="btn sm" target="_blank" rel="noopener" href="https://wa.me/${tel}?text=${encodeURIComponent(msg)}">Envoyer par WhatsApp</a></div></div>`}
+else if(a==='csv')dl('ventes-piste-ong.csv','text/csv',['date,client,telephone,code,fcfa'].concat(S.sales.map(s=>[s.date,'"'+s.client.replace(/"/g,'""')+'"',s.tel,s.code,s.prix].join(','))).join('\n'))});
+document.addEventListener('input',e=>{const t=e.target;
+if(t.id==='imp')return;const p=t.dataset&&t.dataset.p;if(!p)return;setP(p,t.value);save();
+if(p.startsWith('cv.'))renderPrev();else if(p==='let.type'){rLettre()}else if(p.startsWith('let.'))renderLet();else if(p.startsWith('ans.'))hint(+p.split('.')[1])});
+document.addEventListener('change',e=>{const t=e.target;
+if(t.dataset&&t.dataset.act==='jst'){const j=S.jobs[+t.dataset.i];j.statut=t.value;if(t.value==='Envoyée'&&!j.sent)j.sent=Date.now();save();rSuivi()}
+if(t.id==='imp'&&t.files[0]){const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(o.cv)S.cv=o.cv;if(o.let)S.let=o.let;if(o.jobs)S.jobs=o.jobs;if(o.ans)S.ans=o.ans;save();rCV();toast('Sauvegarde restaurée')}catch(x){toast('Fichier invalide')}};r.readAsText(t.files[0])}});
+/* accès vendeur : 5 appuis rapides sur le logo */
+let lt=0,ltt;$('#logo').addEventListener('click',()=>{lt++;clearTimeout(ltt);ltt=setTimeout(()=>lt=0,2000);if(lt>=5){lt=0;$('#tabs').hidden=true;go('admin')}});
+/* démarrage */
+load();
+$('#tabs').innerHTML=TABS.map(t=>`<button role="tab" data-t="${t[0]}">${t[1]}</button>`).join('');
+if(location.hash==='#admin'){$('#tabs').hidden=true;go('admin')}else go('home');
+window.addEventListener('hashchange',()=>{if(location.hash==='#admin'){$('#tabs').hidden=true;go('admin')}else{$('#tabs').hidden=false;go('home')}});
+</script>
+</body>
+</html>
